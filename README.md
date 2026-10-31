@@ -20,6 +20,21 @@
 
 ---
 
+## 📖 About RX Player Pro
+
+**RX Player Pro** is a modern, high-performance, open-source media player engineered for Android. Built from the ground up using **Jetpack Compose**, **Material 3**, and **AndroidX Media3 (ExoPlayer)**, RX Player Pro delivers a fluid, precision-controlled video and audio playback experience with zero compromises.
+
+### 🌟 Key Highlights & Philosophy
+- **🛡️ 100% Offline-First & Privacy-Focused:** No trackers, no telemetry, no analytics, and zero advertisements. Your media library and viewing habits stay strictly private on your device.
+- **⚡ Hardware-Accelerated Decoding:** Seamlessly switch between Hardware (`HW`) and Software (`SW`) codecs on the fly to play high-bitrate 4K/HDR, HEVC/H.265, AV1, and VP9 streams smoothly.
+- **👆 MX Player-Grade Gestures:** Intuitive on-screen swipe controls for brightness, volume, and seeking with real-time HUD overlays that automatically adapt to player controls without blocking user actions.
+- **🎵 Audiophile-Grade DSP:** Comprehensive audio suite with a 10-band equalizer, 10+ acoustic presets, dynamic bass boost, and 3D audio spatial virtualizer.
+- **🌐 Local Network Streaming (SMB2/3):** Stream high-definition videos directly from your local NAS, PC, or media server over Wi-Fi without uploading to any cloud service.
+- **🔒 Built-in Biometric Security:** Secure your personal playlists, videos, and playback history using device biometrics (fingerprint/face) or PIN.
+- **⚖️ Independent & Transparent:** Original architecture with 100% open-source code licensed under the **Apache License 2.0**.
+
+---
+
 ## 📥 Downloads & Quick Links
 
 - 🚀 **[Download Latest Production Release (v2.0.1 APK)](https://github.com/jcksprwx/RX-Player-Pro/releases/download/v2.0.1/RX-Player-Pro-v2.0.1.apk)** *(19.12 MB, SHA-256: `04083424334F63170F56BA55A515C720F97965BCC67F3AF5C64A9FEBD6D6B9A9`)*

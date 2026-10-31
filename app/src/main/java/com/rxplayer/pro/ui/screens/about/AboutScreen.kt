@@ -81,6 +81,24 @@ fun AboutScreen(
                 }
             }
 
+            // About Application Card
+            Card(
+                colors = CardDefaults.cardColors(containerColor = NovaDarkSurface),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Text("About the Application", style = MaterialTheme.typography.titleMedium, color = NovaTextPrimary, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "RX Player Pro is an original, precision-engineered media player built for high-performance video playback and audiophile listening on Android.\n\nDesigned from scratch with modern Jetpack Compose and AndroidX Media3 ExoPlayer, it provides seamless hardware/software decoding, MX Player-style gesture navigation, local area network SMB streaming, and lossless audio processing—all while remaining 100% offline-first and strictly ad-free.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = NovaTextSecondary,
+                        lineHeight = 18.sp
+                    )
+                }
+            }
+
             // Creator Credit Card
             Card(
                 colors = CardDefaults.cardColors(containerColor = NovaDarkSurface),
