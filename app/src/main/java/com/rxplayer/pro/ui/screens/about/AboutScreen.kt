@@ -153,10 +153,10 @@ fun AboutScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
-                    Text("Legal & Compliance", style = MaterialTheme.typography.titleMedium, color = NovaTextPrimary, fontWeight = FontWeight.Bold)
+                    Text("Legal & Open Source License", style = MaterialTheme.typography.titleMedium, color = NovaTextPrimary, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = "RX Player Pro is an original open architecture application designed independently. It contains zero proprietary assets, reverse-engineered binaries, or copyrighted code from MX Player or other commercial players.\n\nBuilt under legitimate open-source licenses (Apache 2.0 & MIT).",
+                        text = "RX Player Pro is open-source software licensed under the Apache License, Version 2.0. You may obtain a copy of the License in the repository root (LICENSE) or at http://www.apache.org/licenses/LICENSE-2.0.\n\nDesigned independently with 100% original architecture, zero trackers, and zero proprietary commercial assets.",
                         style = MaterialTheme.typography.bodySmall,
                         color = NovaTextSecondary,
                         lineHeight = 18.sp

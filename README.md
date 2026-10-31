@@ -15,6 +15,7 @@
   <img src="https://img.shields.io/badge/Platform-Android%208.0%2B%20(API%2026--34)-blue.svg?style=for-the-badge&logo=android" alt="Android 8.0+" />
   <img src="https://img.shields.io/badge/UI-Jetpack%20Compose%20%26%20M3-purple.svg?style=for-the-badge&logo=jetpackcompose" alt="Jetpack Compose" />
   <img src="https://img.shields.io/badge/Media%20Engine-AndroidX%20Media3%201.3.1-orange.svg?style=for-the-badge" alt="Media3" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-success.svg?style=for-the-badge&logo=apache" alt="License: Apache 2.0" /></a>
 </p>
 
 ---
