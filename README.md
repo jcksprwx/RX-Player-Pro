@@ -1,4 +1,4 @@
-﻿# RX Player Pro
+# RX Player Pro
 
 <p align="center">
   <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="RX Player Pro Logo" width="108" height="108" />
@@ -22,13 +22,17 @@
 
 ## 📥 Downloads & Quick Links
 
-- 🚀 **[Download Latest Production Release (v2.0.1 APK)](https://github.com/jcksprwx/RX-Player-Pro/releases/download/v2.0.1/RX-Player-Pro-v2.0.1.apk)** *(18.69 MB, SHA-256: `E101E8B81415A8EEA1408B2A217291892B1A5563B720122337AC36709415C0EE`)*
+- 🚀 **[Download Latest Production Release (v2.0.1 APK)](https://github.com/jcksprwx/RX-Player-Pro/releases/download/v2.0.1/RX-Player-Pro-v2.0.1.apk)** *(19.12 MB, SHA-256: `04083424334F63170F56BA55A515C720F97965BCC67F3AF5C64A9FEBD6D6B9A9`)*
 - 📦 **[View All GitHub Releases](https://github.com/jcksprwx/RX-Player-Pro/releases)**
 - 📝 **[Full v2.0.1 Release Notes](https://github.com/jcksprwx/RX-Player-Pro/releases/tag/v2.0.1)**
 
 ---
 
 ## 🚀 What's New in Version 2.0.1
+
+### 🎨 Brand Identity & High-Resolution App Icon
+- **Precision-Cropped Golden RX Emblem:** Updated application launcher icon with a luxury gold/bronze metallic circular emblem.
+- **Adaptive Icon Architecture:** Added multi-density adaptive icons (mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi) adhering strictly to Android 8.0+ safe-zone standards across circular, squircle, and rounded-rectangle launcher shapes.
 
 ### 🛠️ Touch Gesture & Controls Fix
 - **Touch Gestures Active with Controls Visible:** Fixed a bug where touch seek (horizontal drag), volume (right vertical swipe), and brightness (left vertical swipe) were disabled when player controls and the play button were shown on screen.
