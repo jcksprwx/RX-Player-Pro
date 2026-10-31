@@ -41,6 +41,7 @@ fun PlayerControlsOverlay(
     decoderMode: DecoderMode,
     aspectRatio: AspectRatioMode,
     isLocked: Boolean,
+    isGestureActive: Boolean = false,
     onLockToggle: () -> Unit,
     onBackClick: () -> Unit,
     onPlayPauseClick: () -> Unit,
@@ -170,113 +171,119 @@ fun PlayerControlsOverlay(
                         .align(Alignment.Center)
                 )
             } else {
-                Row(
-                    modifier = Modifier.align(Alignment.Center),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                AnimatedVisibility(
+                    visible = !isGestureActive,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                    modifier = Modifier.align(Alignment.Center)
                 ) {
-                    if (!isLocked) {
-                        // Previous Video Button
-                        IconButton(
-                            onClick = {
-                                onPreviousVideoClick()
-                                onUserInteraction()
-                            },
-                            enabled = hasPreviousVideo,
-                            modifier = Modifier
-                                .size(46.dp)
-                                .background(
-                                    if (hasPreviousVideo) Color.Black.copy(alpha = 0.45f) else Color.Black.copy(alpha = 0.2f),
-                                    CircleShape
-                                )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.SkipPrevious,
-                                contentDescription = "Previous Video",
-                                tint = if (hasPreviousVideo) Color.White else Color.White.copy(alpha = 0.3f),
-                                modifier = Modifier.size(28.dp)
-                            )
-                        }
-
-                        // Rewind 10s Button
-                        IconButton(
-                            onClick = {
-                                onRewindClick()
-                                onUserInteraction()
-                            },
-                            modifier = Modifier
-                                .size(50.dp)
-                                .background(Color.Black.copy(alpha = 0.45f), CircleShape)
-                        ) {
-                            Icon(
-                                Icons.Default.Replay10,
-                                contentDescription = "Rewind 10s",
-                                tint = Color.White,
-                                modifier = Modifier.size(30.dp)
-                            )
-                        }
-                    }
-
-                    // Play / Pause Button
-                    IconButton(
-                        onClick = {
-                            if (isLocked) onLockToggle() else onPlayPauseClick()
-                            onUserInteraction()
-                        },
-                        modifier = Modifier
-                            .size(70.dp)
-                            .background(
-                                if (isLocked) NovaElectricViolet.copy(alpha = 0.85f) else NovaElectricCyan.copy(alpha = 0.95f),
-                                CircleShape
-                            )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = if (isLocked) Icons.Default.Lock else if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                            contentDescription = if (isPlaying) "Pause" else "Play",
-                            tint = Color.Black,
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
+                        if (!isLocked) {
+                            // Previous Video Button
+                            IconButton(
+                                onClick = {
+                                    onPreviousVideoClick()
+                                    onUserInteraction()
+                                },
+                                enabled = hasPreviousVideo,
+                                modifier = Modifier
+                                    .size(46.dp)
+                                    .background(
+                                        if (hasPreviousVideo) Color.Black.copy(alpha = 0.45f) else Color.Black.copy(alpha = 0.2f),
+                                        CircleShape
+                                    )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.SkipPrevious,
+                                    contentDescription = "Previous Video",
+                                    tint = if (hasPreviousVideo) Color.White else Color.White.copy(alpha = 0.3f),
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
 
-                    if (!isLocked) {
-                        // Forward 10s Button
-                        IconButton(
-                            onClick = {
-                                onForwardClick()
-                                onUserInteraction()
-                            },
-                            modifier = Modifier
-                                .size(50.dp)
-                                .background(Color.Black.copy(alpha = 0.45f), CircleShape)
-                        ) {
-                            Icon(
-                                Icons.Default.Forward10,
-                                contentDescription = "Forward 10s",
-                                tint = Color.White,
-                                modifier = Modifier.size(30.dp)
-                            )
+                            // Rewind 10s Button
+                            IconButton(
+                                onClick = {
+                                    onRewindClick()
+                                    onUserInteraction()
+                                },
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .background(Color.Black.copy(alpha = 0.45f), CircleShape)
+                            ) {
+                                Icon(
+                                    Icons.Default.Replay10,
+                                    contentDescription = "Rewind 10s",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
                         }
 
-                        // Next Video Button
+                        // Play / Pause Button
                         IconButton(
                             onClick = {
-                                onNextVideoClick()
+                                if (isLocked) onLockToggle() else onPlayPauseClick()
                                 onUserInteraction()
                             },
-                            enabled = hasNextVideo,
                             modifier = Modifier
-                                .size(46.dp)
+                                .size(70.dp)
                                 .background(
-                                    if (hasNextVideo) Color.Black.copy(alpha = 0.45f) else Color.Black.copy(alpha = 0.2f),
+                                    if (isLocked) NovaElectricViolet.copy(alpha = 0.85f) else NovaElectricCyan.copy(alpha = 0.95f),
                                     CircleShape
                                 )
                         ) {
                             Icon(
-                                imageVector = Icons.Default.SkipNext,
-                                contentDescription = "Next Video",
-                                tint = if (hasNextVideo) Color.White else Color.White.copy(alpha = 0.3f),
-                                modifier = Modifier.size(28.dp)
+                                imageVector = if (isLocked) Icons.Default.Lock else if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                                contentDescription = if (isPlaying) "Pause" else "Play",
+                                tint = Color.Black,
+                                modifier = Modifier.size(40.dp)
                             )
+                        }
+
+                        if (!isLocked) {
+                            // Forward 10s Button
+                            IconButton(
+                                onClick = {
+                                    onForwardClick()
+                                    onUserInteraction()
+                                },
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .background(Color.Black.copy(alpha = 0.45f), CircleShape)
+                            ) {
+                                Icon(
+                                    Icons.Default.Forward10,
+                                    contentDescription = "Forward 10s",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+
+                            // Next Video Button
+                            IconButton(
+                                onClick = {
+                                    onNextVideoClick()
+                                    onUserInteraction()
+                                },
+                                enabled = hasNextVideo,
+                                modifier = Modifier
+                                    .size(46.dp)
+                                    .background(
+                                        if (hasNextVideo) Color.Black.copy(alpha = 0.45f) else Color.Black.copy(alpha = 0.2f),
+                                        CircleShape
+                                    )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.SkipNext,
+                                    contentDescription = "Next Video",
+                                    tint = if (hasNextVideo) Color.White else Color.White.copy(alpha = 0.3f),
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
                         }
                     }
                 }

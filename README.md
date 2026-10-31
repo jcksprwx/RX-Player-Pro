@@ -1,4 +1,4 @@
-# RX Player Pro
+﻿# RX Player Pro
 
 <p align="center">
   <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="RX Player Pro Logo" width="108" height="108" />
@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/jcksprwx/RX-Player-Pro/releases/tag/v2.0.0"><img src="https://img.shields.io/badge/Release-v2.0.0-0078FF.svg?style=for-the-badge&logo=github" alt="Release v2.0.0" /></a>
-  <a href="https://github.com/jcksprwx/RX-Player-Pro/releases/download/v2.0.0/RX-Player-Pro-v2.0.0.apk"><img src="https://img.shields.io/badge/Download-Production%20APK-success.svg?style=for-the-badge&logo=android" alt="Download APK" /></a>
+  <a href="https://github.com/jcksprwx/RX-Player-Pro/releases/tag/v2.0.1"><img src="https://img.shields.io/badge/Release-v2.0.1-0078FF.svg?style=for-the-badge&logo=github" alt="Release v2.0.1" /></a>
+  <a href="https://github.com/jcksprwx/RX-Player-Pro/releases/download/v2.0.1/RX-Player-Pro-v2.0.1.apk"><img src="https://img.shields.io/badge/Download-Production%20APK-success.svg?style=for-the-badge&logo=android" alt="Download APK" /></a>
   <img src="https://img.shields.io/badge/Platform-Android%208.0%2B%20(API%2026--34)-blue.svg?style=for-the-badge&logo=android" alt="Android 8.0+" />
   <img src="https://img.shields.io/badge/UI-Jetpack%20Compose%20%26%20M3-purple.svg?style=for-the-badge&logo=jetpackcompose" alt="Jetpack Compose" />
   <img src="https://img.shields.io/badge/Media%20Engine-AndroidX%20Media3%201.3.1-orange.svg?style=for-the-badge" alt="Media3" />
@@ -21,9 +21,20 @@
 
 ## 📥 Downloads & Quick Links
 
-- 🚀 **[Download Latest Production Release (v2.0.0 APK)](https://github.com/jcksprwx/RX-Player-Pro/releases/download/v2.0.0/RX-Player-Pro-v2.0.0.apk)** *(18.69 MB, SHA-256: `9FB1DD4208E6B9CCE25855C642C542998AD16DC67FD5F5AE6507B09C96C4A029`)*
+- 🚀 **[Download Latest Production Release (v2.0.1 APK)](https://github.com/jcksprwx/RX-Player-Pro/releases/download/v2.0.1/RX-Player-Pro-v2.0.1.apk)** *(18.69 MB, SHA-256: `E101E8B81415A8EEA1408B2A217291892B1A5563B720122337AC36709415C0EE`)*
 - 📦 **[View All GitHub Releases](https://github.com/jcksprwx/RX-Player-Pro/releases)**
-- 📝 **[Full v2.0.0 Release Notes](https://github.com/jcksprwx/RX-Player-Pro/releases/tag/v2.0.0)**
+- 📝 **[Full v2.0.1 Release Notes](https://github.com/jcksprwx/RX-Player-Pro/releases/tag/v2.0.1)**
+
+---
+
+## 🚀 What's New in Version 2.0.1
+
+### 🛠️ Touch Gesture & Controls Fix
+- **Touch Gestures Active with Controls Visible:** Fixed a bug where touch seek (horizontal drag), volume (right vertical swipe), and brightness (left vertical swipe) were disabled when player controls and the play button were shown on screen.
+- **Top-Layer Gesture HUD:** Center HUD indicators (Volume %, Brightness %, Seek target & delta preview) are now elevated to the topmost layer over the controls, eliminating visual overlap.
+- **Adaptive Center Controls Fade:** Center transport buttons (Play/Pause, Rewind, Fast-Forward, Prev, Next) smoothly fade out while actively dragging to give unobstructed prominence to the gesture HUD, and fade back in upon release.
+- **Intelligent Child Pointer Routing:** Bottom seekbar scrubbing and individual button clicks remain isolated and highly responsive without false triggers or gesture conflict.
+- **Gesture-Aware Controls Auto-Hide:** Gesturing for volume, brightness, or seeking actively keeps the interaction timer alive, preventing unexpected UI timeouts during adjustments.
 
 ---
 

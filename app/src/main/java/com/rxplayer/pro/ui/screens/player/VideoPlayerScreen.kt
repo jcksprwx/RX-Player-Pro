@@ -178,12 +178,13 @@ fun VideoPlayerScreen(
         }
     }
 
-    // Auto-hide controls timeout - Resets on user interaction, never hides while actively dragging the seekbar!
+    // Auto-hide controls timeout - Resets on user interaction, never hides while actively dragging the seekbar or gesturing!
     var isUserSeeking by remember { mutableStateOf(false) }
+    var isGestureActive by remember { mutableStateOf(false) }
     var userInteractionTick by remember { mutableLongStateOf(0L) }
 
-    LaunchedEffect(controlsVisible, isPlaying, userInteractionTick, isUserSeeking) {
-        if (controlsVisible && isPlaying && !isLocked && !isUserSeeking) {
+    LaunchedEffect(controlsVisible, isPlaying, userInteractionTick, isUserSeeking, isGestureActive) {
+        if (controlsVisible && isPlaying && !isLocked && !isUserSeeking && !isGestureActive) {
             delay(4500)
             controlsVisible = false
         }
@@ -211,6 +212,15 @@ fun VideoPlayerScreen(
             onDoubleTapCenter = { playerManager.togglePlayPause() },
             onLongPressStart = { playerManager.setPlaybackSpeed(2.0f) },
             onLongPressEnd = { playerManager.setPlaybackSpeed(1.0f) },
+            onGestureActiveChanged = { active ->
+                isGestureActive = active
+                if (active) {
+                    userInteractionTick = System.currentTimeMillis()
+                }
+            },
+            onUserInteraction = {
+                userInteractionTick = System.currentTimeMillis()
+            },
             currentPositionMs = currentPositionMs,
             durationMs = durationMs,
             onSeekConfirm = { targetMs -> playerManager.seekTo(targetMs) },
@@ -292,82 +302,83 @@ fun VideoPlayerScreen(
                         rotationZ = rotationDegrees.toFloat()
                     }
             )
-        }
 
-        PlayerControlsOverlay(
-            visible = controlsVisible,
-            title = currentMedia?.displayName ?: "Video Player",
-            isPlaying = isPlaying,
-            isBuffering = isBuffering,
-            currentPositionMs = currentPositionMs,
-            durationMs = durationMs,
-            bufferedPositionMs = bufferedPositionMs,
-            playbackSpeed = playbackSpeed,
-            decoderMode = decoderMode,
-            aspectRatio = aspectRatio,
-            isLocked = isLocked,
-            onLockToggle = { isLocked = !isLocked },
-            onBackClick = handleExit,
-            onPlayPauseClick = { playerManager.togglePlayPause() },
-            onRewindClick = { playerManager.rewind10Seconds() },
-            onForwardClick = {
-                playerManager.forward10Seconds()
-                userInteractionTick = System.currentTimeMillis()
-            },
-            onPreviousVideoClick = {
-                playerManager.playPreviousVideo()
-                userInteractionTick = System.currentTimeMillis()
-            },
-            onNextVideoClick = {
-                playerManager.playNextVideo()
-                userInteractionTick = System.currentTimeMillis()
-            },
-            hasPreviousVideo = hasPreviousVideo,
-            hasNextVideo = hasNextVideo,
-            onSeek = { targetMs ->
-                playerManager.seekTo(targetMs)
-                userInteractionTick = System.currentTimeMillis()
-            },
-            onSeekStarted = {
-                isUserSeeking = true
-            },
-            onSeekFinished = {
-                isUserSeeking = false
-                userInteractionTick = System.currentTimeMillis()
-            },
-            onUserInteraction = {
-                userInteractionTick = System.currentTimeMillis()
-            },
-            onSpeedClick = { showSpeedDialog = true },
-            onDecoderClick = { showDecoderDialog = true },
-            onAspectRatioClick = { showAspectRatioDialog = true },
-            onRotateClick = {
-                val currentOrientation = activity?.resources?.configuration?.orientation
-                if (currentOrientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
-                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                } else {
-                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-                }
-            },
-            onSubtitlesClick = { showSubtitlesDialog = true },
-            onAudioTrackClick = { showAudioTrackDialog = true },
-            onEqualizerClick = onNavigateToEqualizer,
-            onPipClick = {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    activity?.let { act ->
-                        val lp = act.window.attributes
-                        lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
-                        act.window.attributes = lp
+            PlayerControlsOverlay(
+                visible = controlsVisible,
+                title = currentMedia?.displayName ?: "Video Player",
+                isPlaying = isPlaying,
+                isBuffering = isBuffering,
+                currentPositionMs = currentPositionMs,
+                durationMs = durationMs,
+                bufferedPositionMs = bufferedPositionMs,
+                playbackSpeed = playbackSpeed,
+                decoderMode = decoderMode,
+                aspectRatio = aspectRatio,
+                isLocked = isLocked,
+                isGestureActive = isGestureActive,
+                onLockToggle = { isLocked = !isLocked },
+                onBackClick = handleExit,
+                onPlayPauseClick = { playerManager.togglePlayPause() },
+                onRewindClick = { playerManager.rewind10Seconds() },
+                onForwardClick = {
+                    playerManager.forward10Seconds()
+                    userInteractionTick = System.currentTimeMillis()
+                },
+                onPreviousVideoClick = {
+                    playerManager.playPreviousVideo()
+                    userInteractionTick = System.currentTimeMillis()
+                },
+                onNextVideoClick = {
+                    playerManager.playNextVideo()
+                    userInteractionTick = System.currentTimeMillis()
+                },
+                hasPreviousVideo = hasPreviousVideo,
+                hasNextVideo = hasNextVideo,
+                onSeek = { targetMs ->
+                    playerManager.seekTo(targetMs)
+                    userInteractionTick = System.currentTimeMillis()
+                },
+                onSeekStarted = {
+                    isUserSeeking = true
+                },
+                onSeekFinished = {
+                    isUserSeeking = false
+                    userInteractionTick = System.currentTimeMillis()
+                },
+                onUserInteraction = {
+                    userInteractionTick = System.currentTimeMillis()
+                },
+                onSpeedClick = { showSpeedDialog = true },
+                onDecoderClick = { showDecoderDialog = true },
+                onAspectRatioClick = { showAspectRatioDialog = true },
+                onRotateClick = {
+                    val currentOrientation = activity?.resources?.configuration?.orientation
+                    if (currentOrientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                    } else {
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
                     }
-                    val rational = Rational(16, 9)
-                    val params = PictureInPictureParams.Builder()
-                        .setAspectRatio(rational)
-                        .build()
-                    activity?.enterPictureInPictureMode(params)
-                }
-            },
-            onInfoClick = { showInfoDialog = true }
-        )
+                },
+                onSubtitlesClick = { showSubtitlesDialog = true },
+                onAudioTrackClick = { showAudioTrackDialog = true },
+                onEqualizerClick = onNavigateToEqualizer,
+                onPipClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        activity?.let { act ->
+                            val lp = act.window.attributes
+                            lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+                            act.window.attributes = lp
+                        }
+                        val rational = Rational(16, 9)
+                        val params = PictureInPictureParams.Builder()
+                            .setAspectRatio(rational)
+                            .build()
+                        activity?.enterPictureInPictureMode(params)
+                    }
+                },
+                onInfoClick = { showInfoDialog = true }
+            )
+        }
 
         // MX Player style sleek video start notification pill
         AnimatedVisibility(

@@ -60,7 +60,7 @@ fun AboutScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Version 2.0.0 Pro (Build 200)",
+                        text = "Version 2.0.1 Pro (Build 201)",
                         style = MaterialTheme.typography.bodyMedium,
                         color = NovaTextSecondary
                     )

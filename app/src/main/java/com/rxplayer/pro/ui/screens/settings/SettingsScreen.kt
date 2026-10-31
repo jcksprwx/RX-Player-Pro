@@ -304,7 +304,7 @@ fun SettingsScreen(
                 SettingClickableItem(
                     icon = Icons.Default.Info,
                     title = "About RX Player Pro",
-                    subtitle = "Version 2.0.0 Pro • Ad-Free Architecture",
+                    subtitle = "Version 2.0.1 Pro • Ad-Free Architecture",
                     onClick = onNavigateToAbout
                 )
             }

@@ -46,6 +46,8 @@ fun GestureOverlay(
     onDoubleTapCenter: () -> Unit,
     onLongPressStart: () -> Unit,
     onLongPressEnd: () -> Unit,
+    onGestureActiveChanged: (Boolean) -> Unit = {},
+    onUserInteraction: () -> Unit = {},
     currentPositionMs: Long,
     durationMs: Long,
     onSeekConfirm: (Long) -> Unit,
@@ -69,6 +71,8 @@ fun GestureOverlay(
     val onDoubleTapCenterState by rememberUpdatedState(onDoubleTapCenter)
     val onLongPressStartState by rememberUpdatedState(onLongPressStart)
     val onLongPressEndState by rememberUpdatedState(onLongPressEnd)
+    val onGestureActiveChangedState by rememberUpdatedState(onGestureActiveChanged)
+    val onUserInteractionState by rememberUpdatedState(onUserInteraction)
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -142,6 +146,7 @@ fun GestureOverlay(
         onDispose {
             indicatorDismissJob?.cancel()
             pendingSingleTapJob?.cancel()
+            onGestureActiveChangedState(false)
             activity?.let { act ->
                 val lp = act.window.attributes
                 lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
@@ -156,7 +161,7 @@ fun GestureOverlay(
             // Pinch-to-zoom multi-touch detector
             .pointerInput(Unit) {
                 detectTransformGestures { _, pan, zoom, _ ->
-                    if (!isLockedState && !controlsVisibleState) {
+                    if (!isLockedState) {
                         if (zoom != 1f || zoomScale > 1.05f) {
                             onZoomChange(zoom, pan.x, pan.y)
                         }
@@ -192,6 +197,7 @@ fun GestureOverlay(
                     var isDragging = false
                     var activeGesture = GestureType.NONE
                     var isLongPressing = false
+                    var wasConsumedByChild = false
 
                     // Determine adaptive seek range based on video length
                     val seekRangeSeconds = when {
@@ -203,9 +209,17 @@ fun GestureOverlay(
                     do {
                         val event = awaitPointerEvent()
                         val change = event.changes.firstOrNull() ?: break
+                        if (change.isConsumed) {
+                            wasConsumedByChild = true
+                        }
 
                         // If user uses 2 or more fingers, let zoom handler take over
                         if (event.changes.size > 1) {
+                            if (isDragging) {
+                                isDragging = false
+                                onGestureActiveChangedState(false)
+                                showIndicator = false
+                            }
                             break
                         }
 
@@ -215,20 +229,26 @@ fun GestureOverlay(
                             totalDragX += dx
                             totalDragY += dy
 
-                            // Never initiate seek, volume, brightness, or long-press if touch started in system gesture margin or controls are visible
-                            if (!isLockedState && !isDragging && !isSystemGestureZone && !controlsVisibleState) {
-                                if (abs(totalDragX) > dragTouchSlop && abs(totalDragX) > abs(totalDragY) * 1.25f) {
-                                    isDragging = true
-                                    activeGesture = GestureType.SEEK
-                                    showHudIndicator(GestureType.SEEK)
-                                } else if (abs(totalDragY) > dragTouchSlop && abs(totalDragY) > abs(totalDragX) * 1.25f) {
-                                    isDragging = true
-                                    activeGesture = if (isLeftSide) GestureType.BRIGHTNESS else GestureType.VOLUME
-                                    showHudIndicator(activeGesture)
-                                } else if (!isDragging && System.currentTimeMillis() - downTime > 500L && abs(totalDragX) < dragTouchSlop && abs(totalDragY) < dragTouchSlop) {
-                                    if (!isLongPressing) {
-                                        isLongPressing = true
-                                        onLongPressStartState()
+                            // Initiate seek, volume, brightness, or long-press if outside system margins and unconsumed
+                            if (!isLockedState && !isDragging && !isSystemGestureZone) {
+                                if (!change.isConsumed) {
+                                    if (abs(totalDragX) > dragTouchSlop && abs(totalDragX) > abs(totalDragY) * 1.25f) {
+                                        isDragging = true
+                                        activeGesture = GestureType.SEEK
+                                        showHudIndicator(GestureType.SEEK)
+                                        onGestureActiveChangedState(true)
+                                        onUserInteractionState()
+                                    } else if (abs(totalDragY) > dragTouchSlop && abs(totalDragY) > abs(totalDragX) * 1.25f) {
+                                        isDragging = true
+                                        activeGesture = if (isLeftSide) GestureType.BRIGHTNESS else GestureType.VOLUME
+                                        showHudIndicator(activeGesture)
+                                        onGestureActiveChangedState(true)
+                                        onUserInteractionState()
+                                    } else if (!isDragging && System.currentTimeMillis() - downTime > 500L && abs(totalDragX) < dragTouchSlop && abs(totalDragY) < dragTouchSlop) {
+                                        if (!isLongPressing) {
+                                            isLongPressing = true
+                                            onLongPressStartState()
+                                        }
                                     }
                                 }
                             }
@@ -236,6 +256,7 @@ fun GestureOverlay(
                             if (isDragging) {
                                 change.consume()
                                 showHudIndicator(activeGesture)
+                                onUserInteractionState()
                                 when (activeGesture) {
                                     GestureType.SEEK -> {
                                         // Silky-smooth scrubbing: Calculate target time smoothly
@@ -282,6 +303,7 @@ fun GestureOverlay(
                         }
                         // Always auto-dismiss the volume/brightness/seek HUD dialog after lifting finger!
                         scheduleHudDismissal(1000L)
+                        onGestureActiveChangedState(false)
                     } else {
                         // Dismiss any active HUD immediately on tap
                         if (showIndicator) {
@@ -289,7 +311,7 @@ fun GestureOverlay(
                         }
                         // It was a tap!
                         val tapDuration = System.currentTimeMillis() - downTime
-                        if (!isSystemGestureZone && tapDuration < 350L && abs(totalDragX) < dragTouchSlop && abs(totalDragY) < dragTouchSlop) {
+                        if (!isSystemGestureZone && !wasConsumedByChild && tapDuration < 350L && abs(totalDragX) < dragTouchSlop && abs(totalDragY) < dragTouchSlop) {
                             val now = System.currentTimeMillis()
                             val isDoubleTap = (now - lastTapTime < 320L && abs(downX - lastTapX) < 180f)
 
@@ -299,7 +321,7 @@ fun GestureOverlay(
                                 pendingSingleTapJob = null
                                 lastTapTime = 0L
 
-                                if (!isLockedState && !controlsVisibleState) {
+                                if (!isLockedState) {
                                     val third = size.width / 3f
                                     when {
                                         downX < third -> {
@@ -329,7 +351,7 @@ fun GestureOverlay(
                                 }
                             } else {
                                 if (controlsVisibleState) {
-                                    // When controls are visible, tap dismisses them immediately
+                                    // When controls are visible, tap on open area dismisses them immediately
                                     onSingleTapState()
                                 } else {
                                     // First tap: register position and time, and wait 260ms before triggering single tap
